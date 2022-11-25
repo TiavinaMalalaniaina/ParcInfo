@@ -71,6 +71,8 @@ public class ParcInfoClient extends Thread{
 			getOutputStream().writeUTF(message);	
 		}
 		
+//		REINIT MESSAGE
+		
 		
 		
 //	THREADING
@@ -78,13 +80,20 @@ public class ParcInfoClient extends Thread{
 		public void run() {
 			try {
 				ParcInfoClient pc = new ParcInfoClient();
-				pc.connectServer("localhost", 1236);
-				SystemInfo si = new SystemInfo();
-				pc.writeMessage(si.getAllInfo());
-				System.out.println(si.getAllInfo());
-				pc.disconnectServer();
-				Thread.sleep(200);
-			} catch(IOException | InterruptedException e) {
+				try {
+					String m = "Client";
+					int index = 3;
+					while (true) {
+						pc.connectServer("localhost", 1236);
+						SystemInfo si = new SystemInfo();
+						pc.writeMessage(m+index);
+						pc.disconnectServer();
+						Thread.sleep(5000);	
+					}
+				} catch(IOException | InterruptedException e) {
+					e.printStackTrace();
+				}
+			} catch(Exception e) {
 				e.printStackTrace();
 			}
 		}

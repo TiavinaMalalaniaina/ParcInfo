@@ -86,11 +86,18 @@ public class ParcInfoServer {
 	public static void main(String[] args) {
 		try {
 			ParcInfoServer ss = new ParcInfoServer(1236);
-			System.out.println("Waiting for client:");
-			while (true) {
-				ss.openServer();
-				System.out.println(ss.readMessage());
-				ss.closeServer();
+			try {
+				System.out.println("Waiting for client:");
+				while (true) {
+					ss.openServer();
+					System.out.println(ss.readMessage());
+					ss.closeServer();
+					Thread.sleep(5000);
+					System.out.println();
+					System.out.println();
+				}
+			} catch (IOException | InterruptedException e) {
+				e.printStackTrace();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
