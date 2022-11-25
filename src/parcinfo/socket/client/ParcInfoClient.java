@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import parcinfo.util.SystemInfo;
 
-public class ParcInfoClient {
+public class ParcInfoClient extends Thread{
 //  FIELDS
 	Socket socket 					= null;
 	DataInputStream inputStream 	= null;
@@ -72,17 +72,31 @@ public class ParcInfoClient {
 		}
 		
 		
+		
+//	THREADING
+//		THREAD TO SEND A MESSAGE
+		public void run() {
+			try {
+				ParcInfoClient pc = new ParcInfoClient();
+				pc.connectServer("localhost", 1236);
+				SystemInfo si = new SystemInfo();
+				pc.writeMessage(si.getAllInfo());
+				System.out.println(si.getAllInfo());
+				pc.disconnectServer();
+				Thread.sleep(200);
+			} catch(IOException | InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
 	public static void main(String[] args) {
 		try {
-			ParcInfoClient pc = new ParcInfoClient();
-			pc.connectServer("localhost", 1236);
 			System.out.println("Sending message");
-			SystemInfo si = new SystemInfo();
-			pc.writeMessage(si.getAllInfo());
-			pc.disconnectServer();
+			ParcInfoClient pc = new ParcInfoClient();
+			pc.start();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 }
