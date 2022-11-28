@@ -62,7 +62,10 @@ public class ParcInfoClient extends Thread{
 //	MESSAGE
 //		READ MESSAGE FROM SERVER
 		public String readMessage() throws IOException {
-			String line = getInputStream().readUTF();
+			String line = "";
+			while(getInputStream().available()>0) {
+				line = line.concat(getInputStream().readUTF());
+			}
 			return line;
 		}
 		
@@ -70,6 +73,7 @@ public class ParcInfoClient extends Thread{
 		public void writeMessage(String message) throws IOException{
 			getOutputStream().writeUTF(message);	
 		}
+		
 		
 //		REINIT MESSAGE
 		
@@ -82,15 +86,15 @@ public class ParcInfoClient extends Thread{
 				ParcInfoClient pc = new ParcInfoClient();
 				try {
 					String m = "Client";
-					int index = 3;
+					int index = 5;
+					pc.connectServer("localhost", 1236);
 					while (true) {
-						pc.connectServer("localhost", 1236);
-						SystemInfo si = new SystemInfo();
-						pc.writeMessage(m+index);
-						pc.disconnectServer();
+//						SystemInfo si = new SystemInfo();
+						pc.writeMessage(m+index+" ");
 						Thread.sleep(5000);	
 					}
 				} catch(IOException | InterruptedException e) {
+					pc.disconnectServer();
 					e.printStackTrace();
 				}
 			} catch(Exception e) {

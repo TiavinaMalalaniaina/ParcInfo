@@ -77,7 +77,10 @@ public class ParcInfoServer {
 //	MESSAGE
 //		READ MESSAGE FROM CLIENT
 		public String readMessage() throws IOException {
-			String line = getInputStream().readUTF();
+			String line = "";
+			while(getInputStream().available()>0) {
+				line = line.concat(getInputStream().readUTF());
+			}
 			return line;
 		}
 	
