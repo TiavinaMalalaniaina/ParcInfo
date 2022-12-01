@@ -7,17 +7,20 @@ import java.net.ServerSocket;
 
 import java.io.IOException;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.BufferedInputStream;
+
 /*
  * The server class
  */
-public class ParcInfoServer {
+public class ParcInfoServer extends Thread{
 // FIELDS
 	int port;
 	Socket socket 				= null;
 	ServerSocket server 		= null;
 	DataInputStream inputStream = null;
-
+	DataOutputStream outputStream = null;
+	
 // CONSTRUCTORS
 	public ParcInfoServer(int port) throws IOException{
 		setPort(port);
@@ -94,10 +97,9 @@ public class ParcInfoServer {
 				while (true) {
 					ss.openServer();
 					System.out.println(ss.readMessage());
+					System.out.println("----------------*-----------------");
 					ss.closeServer();
 					Thread.sleep(5000);
-					System.out.println();
-					System.out.println();
 				}
 			} catch (IOException | InterruptedException e) {
 				e.printStackTrace();

@@ -1,6 +1,7 @@
 package parcinfo.socket.client;
 
 import java.net.Socket;
+import java.util.Scanner;
 import java.net.UnknownHostException;
 
 import java.io.DataInputStream;
@@ -47,7 +48,7 @@ public class ParcInfoClient extends Thread{
 //		CONNECT TO SERVER
 		public void connectServer(String address, int port) throws IOException, UnknownHostException{
 			setSocket(new Socket(address, port));
-			setInputStream(new DataInputStream(System.in));
+			setInputStream(new DataInputStream(getSocket().getInputStream()));
 			setOutputStream(new DataOutputStream(getSocket().getOutputStream()));
 		}
 		
@@ -72,6 +73,7 @@ public class ParcInfoClient extends Thread{
 //		WRITE MESSAGE TO SERVER
 		public void writeMessage(String message) throws IOException{
 			getOutputStream().writeUTF(message);	
+			getOutputStream().flush();
 		}
 		
 		
@@ -80,24 +82,27 @@ public class ParcInfoClient extends Thread{
 		
 		
 //	THREADING
-//		THREAD TO SEND A MESSAGE
+//		THREAD TO SEND A MES SAGE
 		public void run() {
+			Scanner sc = new Scanner(System.in);
 			try {
 				ParcInfoClient pc = new ParcInfoClient();
 				try {
-					String m = "Client";
-					int index = 5;
-					pc.connectServer("localhost", 1236);
+					String m = "Tiavina";
+					pc.connectServer("localhost", 4444);
 					while (true) {
-//						SystemInfo si = new SystemInfo();
-						pc.writeMessage(m+index+" ");
-						Thread.sleep(5000);	
+						System.out.print("----->");
+						SystemInfo si = new SystemInfo();
+						System.out.println(m+" "+si.getAllInfo());
+						pc.writeMessage(m+" "+si.getAllInfo());
+						Thread.sleep(2000);
 					}
-				} catch(IOException | InterruptedException e) {
+				} catch(IOException e) {
 					pc.disconnectServer();
 					e.printStackTrace();
 				}
 			} catch(Exception e) {
+				sc.close();
 				e.printStackTrace();
 			}
 		}
