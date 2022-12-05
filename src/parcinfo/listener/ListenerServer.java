@@ -5,6 +5,9 @@ import java.awt.event.KeyListener;
 
 public class ListenerServer implements KeyListener {
 	
+//	FIELDS
+	
+	
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
