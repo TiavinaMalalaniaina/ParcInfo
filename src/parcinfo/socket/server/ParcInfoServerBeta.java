@@ -12,13 +12,14 @@ import java.util.Vector;
 import parcinfo.thread.ThreadSearchClient;
 import parcinfo.thread.ThreadListenAllClient;
 
-public class ParcInfoServerBeta {
+public class ParcInfoServerBeta extends Thread{
 //	FIELDS
 	int port;
 	ServerSocket server;
 	Vector<Socket> sockets;
 	Vector<DataInputStream> ins;
 	Vector<DataOutputStream> outs;
+	
 	
 //	CONSTRUCTOR
 	public ParcInfoServerBeta(int port) throws IOException{
@@ -80,14 +81,41 @@ public class ParcInfoServerBeta {
 	
 	
 	
+//	MESSAGE
+//	READ MESSAGE FROM CLIENT
+	public String readMessage(DataInputStream in, DataOutputStream out) throws IOException {
+		String line = "";
+		line = line.concat(in.readUTF());
+		out.flush();
+		return line;
+	}
 	
-//	MAIN
-	public static void main(String[] args) {
+//	READ MESSAGE FROM All CLIENT
+	public String[] readAllMessage() throws IOException {
+		Vector<DataInputStream> ins = getIns();
+		Vector<DataOutputStream> outs = getOuts();
+		String[] line = new String[ins.size()];
+		for (int i=0 ; i < line.length ; i++) {
+			line[i] = readMessage(ins.get(i), outs.get(i));
+		}
+		return line;
+	}
+	
+	public String[][] getAllDonne() throws IOException {
+		String[][] donnes = new String[getIns().size()][];
+		String[] allMessage = readAllMessage();
+		for (int i=0; i < allMessage.length; i++) {
+			donnes[i] = allMessage[i].split(";;");
+		}
+		return donnes;
+	}
+	
+	
+//	RUN
+	public void run() {
 		try {
-			ParcInfoServerBeta pisb = new ParcInfoServerBeta(4444);
-			System.out.println(pisb.getServer());
-			ThreadSearchClient tsc = new ThreadSearchClient(pisb);
-			ThreadListenAllClient tlc = new ThreadListenAllClient(pisb);
+			ThreadSearchClient tsc = new ThreadSearchClient(this);
+			ThreadListenAllClient tlc = new ThreadListenAllClient(this);
 			tsc.start();
 			tlc.start();
 		} catch(Exception e) {

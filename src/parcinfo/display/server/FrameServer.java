@@ -1,28 +1,49 @@
 package parcinfo.display.server;
 
 import javax.swing.JFrame;
-import javax.swing.JScrollPane;
 
-import java.awt.GridLayout;
+import java.awt.BorderLayout;
 
-import parcinfo.display.server.panel.PanelInfo;
+import parcinfo.display.server.panel.SettingPanel;
+import parcinfo.display.server.panel.TablePanelInfo;
 
-public class FrameServer extends SettingFrame {
+import parcinfo.socket.server.ParcInfoServerBeta;
+
+public class FrameServer extends JFrame {
 	/**
 	 * 
 	 */
+//	FIELDS
+	ParcInfoServerBeta pisb;
 	private static final long serialVersionUID = 1L;
 
-	public FrameServer() {
-		super(1000,800);
-		GridLayout gl = new GridLayout(6,1);
-		gl.setVgap(10);
-		this.setLayout(gl);
-		this.add(new PanelInfo());
-		this.add(new PanelInfo());
+//	CONSTRUCTOR
+	public FrameServer(ParcInfoServerBeta pisb) {
+		setPisb(pisb);
+		getPisb().start();
+		setSize(1000, 800);
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setLayout(new BorderLayout());
+		add(new SettingPanel(), BorderLayout.WEST);
+		add(new TablePanelInfo(getPisb()), BorderLayout.CENTER);
 	}
 	public static void main(String[] args) {
-		new FrameServer();
+		try{
+			FrameServer fs = new FrameServer(new ParcInfoServerBeta(4444));
+			fs.setVisible(true);
+		} catch(Exception e) {
+			
+		}
 	}
 	
+//	GETTER
+	public ParcInfoServerBeta getPisb() {
+		return pisb;
+	}
+	
+//	SETTER
+	public void setPisb(ParcInfoServerBeta pisb) {
+		this.pisb = pisb;
+	}
 }

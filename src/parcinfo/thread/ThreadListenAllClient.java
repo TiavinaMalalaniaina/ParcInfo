@@ -36,14 +36,13 @@ public class ThreadListenAllClient extends Thread {
 				for(String message : readAllMessage()) {
 					System.out.println(message);
 				}
-				System.out.println(pisb.getIns().size()+" personne connecté");
+				System.out.println(pisb.getSockets().size()+" personne connecté");
 				Thread.sleep(5000);
 			}
 		} catch(IOException | InterruptedException e) {
 			
 		}
 	}
-	
 	
 //	UTIL
 //	MESSAGE
@@ -52,16 +51,15 @@ public class ThreadListenAllClient extends Thread {
 	
 		public String readMessage(DataInputStream in, DataOutputStream out) throws IOException {
 			String line = "nbOctet:"+out.size()+";;m:";
-			while(in.available()>0) {
-				line = line.concat(in.readUTF());
-			}
+			line = line.concat(in.readUTF());
+			out.flush();
 			return line;
 		}
 		
 	//	READ MESSAGE FROM All CLIENT
 		public String[] readAllMessage() throws IOException {
-			Vector<DataInputStream> ins = pisb.getIns();
-			Vector<DataOutputStream> outs = pisb.getOuts();
+			Vector<DataInputStream> ins = getPisb().getIns();
+			Vector<DataOutputStream> outs = getPisb().getOuts();
 			String[] line = new String[ins.size()];
 			for (int i=0 ; i < line.length ; i++) {
 				line[i] = readMessage(ins.get(i), outs.get(i));

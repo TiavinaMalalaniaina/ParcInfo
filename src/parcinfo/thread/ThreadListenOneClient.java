@@ -15,10 +15,10 @@ public class ThreadListenOneClient extends Thread {
 	DataInputStream in;
 	
 //	CONSTRUCTOR
-	public ThreadListenOneClient(Socket socket) throws IOException{
+	public ThreadListenOneClient(Socket socket, DataOutputStream out, DataInputStream in) throws IOException{
 		setSocket(socket);
-		setOut(new DataOutputStream(socket.getOutputStream()));
-		setIn(new DataInputStream(socket.getInputStream()));
+		setOut(out);
+		setIn(in);
 	}
 	
 
@@ -49,14 +49,17 @@ public class ThreadListenOneClient extends Thread {
 		String line = getIn().readUTF();
 		return line;
 	}
-	
+	public void writeMessage(String message) throws IOException {
+		getOut().writeUTF(message);
+	}
 	
 //	THREAD
 	public void run() {
 		try {
 			while (true) {
 				String message = readMessage();
-				System.out.println("Message:"+message);
+				writeMessage(message);
+//				System.out.println("Message:"+message);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

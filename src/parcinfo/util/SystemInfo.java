@@ -28,10 +28,10 @@ public class SystemInfo {
 	
 	public String getAllInfo() {
 		String info = "";
-		info = info.concat("OS:"+getOsName()+";;version:"+getOsVersion());
-		info = info.concat(";;MaxMemory:"+getMaxMemory());
-		info = info.concat(";;FreeMemory:"+getFreeMemory());
-		info = info.concat(";;UsingMemory:"+getUsingMemory());
+		info = info.concat("OS:"+getOsName()+";;");
+		info = info.concat("MaxMemory:"+getMaxMemory()+";;");
+		info = info.concat("FreeMemory:"+getFreeMemory()+";;");
+		info = info.concat("UsingMemory:"+getUsingMemory()+";;");
 		return info;
 	}
 }
